@@ -2,6 +2,7 @@ package br.com.gestaoeventos.services;
 
 import br.com.gestaoeventos.domain.attendee.Attendee;
 import br.com.gestaoeventos.domain.event.Event;
+import br.com.gestaoeventos.domain.event.exceptions.EventNotFoundException;
 import br.com.gestaoeventos.dto.event.EventIdDTO;
 import br.com.gestaoeventos.dto.event.EventRequestDTO;
 import br.com.gestaoeventos.dto.event.EventResponseDTO;
@@ -26,7 +27,7 @@ public class EventService {
     private final AttendeeRepository attendeeRepository;
 
     public EventResponseDTO getEventDetail(String eventId) {
-        Event eventFind = this.eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event not found with ID: "+eventId));
+        Event eventFind = this.eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException("Event not found with ID: "+eventId));
         List<Attendee> attendeeList = this.attendeeRepository.findByEventId(eventId);
         return new EventResponseDTO(eventFind, attendeeList.size());
     }
