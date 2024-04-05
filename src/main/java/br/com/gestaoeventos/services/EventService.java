@@ -6,7 +6,6 @@ import br.com.gestaoeventos.domain.event.exceptions.EventNotFoundException;
 import br.com.gestaoeventos.dto.event.EventIdDTO;
 import br.com.gestaoeventos.dto.event.EventRequestDTO;
 import br.com.gestaoeventos.dto.event.EventResponseDTO;
-import br.com.gestaoeventos.repositories.AttendeeRepository;
 import br.com.gestaoeventos.repositories.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +23,11 @@ public class EventService {
     private final EventRepository eventRepository;
 
     @Autowired
-    private final AttendeeRepository attendeeRepository;
+    private final AttendeeService attendeeService;
 
     public EventResponseDTO getEventDetail(String eventId) {
         Event eventFind = this.eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException("Event not found with ID: "+eventId));
-        List<Attendee> attendeeList = this.attendeeRepository.findByEventId(eventId);
+        List<Attendee> attendeeList = this.attendeeService.getAllAttendeesFromEvent(eventId);
         return new EventResponseDTO(eventFind, attendeeList.size());
     }
 
