@@ -1,9 +1,11 @@
 package br.com.gestaoeventos.controllers;
 
 import br.com.gestaoeventos.domain.event.Event;
+import br.com.gestaoeventos.dto.attendee.AttendeesListResponseDTO;
 import br.com.gestaoeventos.dto.event.EventIdDTO;
 import br.com.gestaoeventos.dto.event.EventRequestDTO;
 import br.com.gestaoeventos.dto.event.EventResponseDTO;
+import br.com.gestaoeventos.services.AttendeeService;
 import br.com.gestaoeventos.services.EventService;
 import com.sun.java.accessibility.util.EventID;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,9 @@ public class EventController {
     @Autowired
     private final EventService eventService;
 
+    @Autowired
+    private final AttendeeService attendeeService;
+
     @GetMapping("/{id}")
     public ResponseEntity<EventResponseDTO> getEvent(@PathVariable String id) {
         EventResponseDTO eventDetail = eventService.getEventDetail(id);
@@ -36,6 +41,12 @@ public class EventController {
         URI uri = uriComponentsBuilder.path("/events/{id}").buildAndExpand(eventId.eventId()).toUri();
 
         return ResponseEntity.created(uri).body(eventId);
+    }
+
+    @GetMapping("/attendees/{id}")
+    public ResponseEntity<AttendeesListResponseDTO> getEventAttendees(@PathVariable String id) {
+        AttendeesListResponseDTO eventsAttendee = this.attendeeService.getEventsAttendee(id);
+        return ResponseEntity.ok(eventsAttendee);
     }
 
 }
