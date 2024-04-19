@@ -1,6 +1,8 @@
 package br.com.gestaoeventos.controllers;
 
 import br.com.gestaoeventos.domain.event.Event;
+import br.com.gestaoeventos.dto.attendee.AttendeeIdDTO;
+import br.com.gestaoeventos.dto.attendee.AttendeeRequestDTO;
 import br.com.gestaoeventos.dto.attendee.AttendeesListResponseDTO;
 import br.com.gestaoeventos.dto.event.EventIdDTO;
 import br.com.gestaoeventos.dto.event.EventRequestDTO;
@@ -47,6 +49,14 @@ public class EventController {
     public ResponseEntity<AttendeesListResponseDTO> getEventAttendees(@PathVariable String id) {
         AttendeesListResponseDTO eventsAttendee = this.attendeeService.getEventsAttendee(id);
         return ResponseEntity.ok(eventsAttendee);
+    }
+
+    @PostMapping("/{eventId}/attendees")
+    public ResponseEntity<AttendeeIdDTO> registerParticipant(@PathVariable String eventId, @RequestBody AttendeeRequestDTO attendeeRequestDTO, UriComponentsBuilder uriComponentsBuilder) {
+        AttendeeIdDTO attendeeIdDTO = this.eventService.registerAttendeeOnEvent(eventId, attendeeRequestDTO);
+        URI uri = uriComponentsBuilder.path("/attendees/{attendeeId}/badge").buildAndExpand(attendeeIdDTO.attendeeId()).toUri();
+
+        return ResponseEntity.created(uri).body(attendeeIdDTO);
     }
 
 }
