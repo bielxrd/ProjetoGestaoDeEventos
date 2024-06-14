@@ -34,6 +34,21 @@ public class AttendeeService {
         return this.attendeeRepository.findByEventId(eventId);
     }
 
+    public AttendeesListResponseDTO getAllAttendees() {
+        List<Attendee> attendeeList = this.attendeeRepository.findAll();
+
+        List<AttendeeDetails> attendeeDetailsList = attendeeList.stream().map(attendee -> {
+
+            Optional<CheckIn> checkIn = this.checkInService.getCheckIn(attendee.getId());
+
+            LocalDateTime checkedInAt = checkIn.isPresent() ? checkIn.get().getCreatedAt() : null;
+
+            return new AttendeeDetails(attendee.getId(), attendee.getName(), attendee.getEmail(), attendee.getCreatedAt(), checkedInAt);
+        }).toList();
+
+        return new AttendeesListResponseDTO(attendeeDetailsList);
+    }
+
     public AttendeesListResponseDTO getEventsAttendee(String eventId){
         List<Attendee> attendeeList = getAllAttendeesFromEvent(eventId);
 
