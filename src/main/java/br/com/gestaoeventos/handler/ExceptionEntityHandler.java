@@ -1,4 +1,4 @@
-package br.com.gestaoeventos.config;
+package br.com.gestaoeventos.handler;
 
 import br.com.gestaoeventos.domain.attendee.exceptions.AttendeeAlreadyRegisteredException;
 import br.com.gestaoeventos.domain.attendee.exceptions.AttendeeNotFoundException;
