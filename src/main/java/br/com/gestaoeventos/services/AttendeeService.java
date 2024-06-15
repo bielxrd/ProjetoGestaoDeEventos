@@ -4,14 +4,12 @@ import br.com.gestaoeventos.domain.attendee.Attendee;
 import br.com.gestaoeventos.domain.attendee.exceptions.AttendeeAlreadyRegisteredException;
 import br.com.gestaoeventos.domain.attendee.exceptions.AttendeeNotFoundException;
 import br.com.gestaoeventos.domain.checkin.CheckIn;
-import br.com.gestaoeventos.dto.attendee.AttendeeBadgeResponseDTO;
-import br.com.gestaoeventos.dto.attendee.AttendeeDetails;
-import br.com.gestaoeventos.dto.attendee.AttendeesListResponseDTO;
-import br.com.gestaoeventos.dto.attendee.AttendeeBadgeDTO;
+import br.com.gestaoeventos.dto.attendee.*;
 import br.com.gestaoeventos.repositories.AttendeeRepository;
 import br.com.gestaoeventos.repositories.CheckinRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -29,6 +27,17 @@ public class AttendeeService {
 
     @Autowired
     private final CheckInService checkInService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public Attendee createAttendee(NewAttendeeRequestDTO requestDTO) {
+        Attendee attendee = new Attendee();
+        attendee.setName(requestDTO.getName());
+        attendee.setEmail(requestDTO.getEmail());
+        attendee.setSenha(passwordEncoder.encode(requestDTO.getSenha()));
+       return this.attendeeRepository.save(attendee);
+    }
 
     public List<Attendee> getAllAttendeesFromEvent(String eventId) {
         return this.attendeeRepository.findByEventId(eventId);

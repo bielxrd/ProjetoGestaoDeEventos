@@ -1,7 +1,9 @@
 package br.com.gestaoeventos.controllers;
 
+import br.com.gestaoeventos.domain.attendee.Attendee;
 import br.com.gestaoeventos.dto.attendee.AttendeeBadgeResponseDTO;
 import br.com.gestaoeventos.dto.attendee.AttendeesListResponseDTO;
+import br.com.gestaoeventos.dto.attendee.NewAttendeeRequestDTO;
 import br.com.gestaoeventos.services.AttendeeService;
 import br.com.gestaoeventos.services.CheckInService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +29,13 @@ public class AttendeeController {
 
     @Autowired
     private final AttendeeService attendeeService;
+
+    @PostMapping("/create")
+    public ResponseEntity<Attendee> createAttendee(@RequestBody NewAttendeeRequestDTO newAttendeeRequestDTO) {
+        Attendee attendee = this.attendeeService.createAttendee(newAttendeeRequestDTO);
+
+        return ResponseEntity.ok().body(attendee);
+    }
 
     @GetMapping("/{attendeeId}/badge")
     @Operation(summary = "Rota responsável por pegar o badge do participante")
