@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -27,10 +28,14 @@ public class Attendee {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String senha;
+
     @ManyToOne
-    @JoinColumn(name = "event_id" , nullable = false)
+    @JoinColumn(name = "event_id" , nullable = true)
     private Event event;
 
     @Column(nullable = false, name = "created_at")
+    @CreationTimestamp
     public LocalDateTime createdAt;
 }
